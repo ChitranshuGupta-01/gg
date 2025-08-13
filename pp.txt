@@ -1,77 +1,89 @@
-// This class represents a single customer in the bank customer.java
-public class Customer {
-    int id;          // Customer ID (auto-generated)
-    String name;     // Customer name
-    String email;    // Customer email
-    String contact;  // Customer contact number
-    String accountType; // Savings or Current
+// Custom exception class for invalid inputs
+public class InvalidInputException extends Exception {
+    public InvalidInputException(String message) {
+        super(message); // Pass message to Exception class
+    }
+}
+InvalidInputException.java
 
-    // Constructor to create a customer with all details
+
+
+//////////////////////////////
+
+Customer.java (unchanged)
+public class Customer {
+    int id;
+    String name;
+    String email;
+    String contact;
+    String accountType;
+
     public Customer(int id, String name, String email, String contact, String accountType) {
-        this.id = id;                  // Assign generated ID
-        this.name = name;              // Assign name
-        this.email = email;            // Assign email
-        this.contact = contact;        // Assign contact number
-        this.accountType = accountType;// Assign account type
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.contact = contact;
+        this.accountType = accountType;
     }
 }
 
-;;;;;;;;;;;;;;;;
 
-bankoperations.java
-// Interface that defines the operations of the Bank Customer Management System
+//////////////////////////////
+
+BankOperations.java (unchanged)
+
 public interface BankOperations {
-    // Method to add a new customer
-    void addCustomer(String name, String email, String contact, String accountType);
-    
-    // Method to display all customers
+    void addCustomer(String name, String email, String contact, String accountType) throws InvalidInputException;
     void displayCustomers();
-    
-    // Method to search a customer by ID
     void searchCustomer(int id);
-    
-    // Method to delete a customer by ID
     void deleteCustomer(int id);
 }
 
-,,,,,,,,,,,,,,,,,,,,,,,
+//////////////////////////////////////////////////
+
+BankOperationsImpl.java (with validation added)
+java
+Copy
+Edit
 
 
-BankOperationsImpl.java
-
-
-// This class implements BankOperations interface
-// It contains the logic to handle customer data using an array
 public class BankOperationsImpl implements BankOperations {
 
-    private Customer[] customers = new Customer[100]; // Array to store up to 100 customers
-    private int count = 0; // Number of customers currently stored
+    private Customer[] customers = new Customer[100];
+    private int count = 0;
 
-    // Add a new customer to the array
     @Override
-    public void addCustomer(String name, String email, String contact, String accountType) {
-        // Generate a random 4-digit customer ID
+    public void addCustomer(String name, String email, String contact, String accountType) throws InvalidInputException {
+        // Validate Name
+        if (!name.matches("[a-zA-Z ]+")) {
+            throw new InvalidInputException("Invalid Name! Name should contain only alphabets.");
+        }
+        // Validate Email
+        if (!email.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$")) {
+            throw new InvalidInputException("Invalid Email! Please enter a valid email address.");
+        }
+        // Validate Contact Number
+        if (!contact.matches("\\d{10}")) {
+            throw new InvalidInputException("Invalid Contact! Contact number must be exactly 10 digits.");
+        }
+        // Validate Account Type
+        if (!(accountType.equalsIgnoreCase("Savings") || accountType.equalsIgnoreCase("Current"))) {
+            throw new InvalidInputException("Invalid Account Type! Must be either Savings or Current.");
+        }
+
+        // If all validations pass → add customer
         int id = (int) (Math.random() * 9000) + 1000;
-        
-        // Create a new Customer object with the provided details
         customers[count] = new Customer(id, name, email, contact, accountType);
-        
-        // Inform the user that customer has been added
         System.out.println("Customer added successfully with customer id " + id);
-        
-        // Increase the count of customers
         count++;
     }
 
-    // Display all existing customers
     @Override
     public void displayCustomers() {
-        // If no customers exist, show message
         if (count == 0) {
             System.out.println("No customers found.");
-            return; // Exit method
+            return;
         }
-        // Loop through all customers and display details
         for (int i = 0; i < count; i++) {
             System.out.println("Customer Id = " + customers[i].id +
                     ", Customer name = " + customers[i].name +
@@ -81,71 +93,51 @@ public class BankOperationsImpl implements BankOperations {
         }
     }
 
-    // Search for a customer by ID
     @Override
     public void searchCustomer(int id) {
-        // Loop through customers to find a match
         for (int i = 0; i < count; i++) {
             if (customers[i].id == id) {
-                // If match found, display details
                 System.out.println("Customer Id = " + customers[i].id +
                         ", Customer name = " + customers[i].name +
                         ", Customer email = " + customers[i].email +
                         ", Customer contact = " + customers[i].contact +
                         ", Account Type = " + customers[i].accountType);
-                return; // Exit method after finding
+                return;
             }
         }
-        // If loop ends without finding, customer not found
         System.out.println("Customer not found.");
     }
 
-    // Delete a customer by ID
     @Override
     public void deleteCustomer(int id) {
-        // Loop through customers to find the match
         for (int i = 0; i < count; i++) {
             if (customers[i].id == id) {
-                // Shift all elements after this position to the left
                 for (int j = i; j < count - 1; j++) {
                     customers[j] = customers[j + 1];
                 }
-                // Remove last duplicate entry
                 customers[count - 1] = null;
-                
-                // Decrease the count
                 count--;
-                
-                // Inform user
                 System.out.println("Customer deleted successfully.");
-                return; // Exit method after deleting
+                return;
             }
         }
-        // If not found
         System.out.println("Customer not found.");
     }
 }
 
-....................................
+////////////////////////////////////////////////////
 Main
 
-import java.util.Scanner; // For taking user input
+import java.util.InputMismatchException;
+import java.util.Scanner;
 
-// Main class to run the application
 public class MainApp {
     public static void main(String[] args) {
-        
-        // Scanner object for input
         Scanner sc = new Scanner(System.in);
-        
-        // Create object of BankOperations using its implementation
         BankOperations bank = new BankOperationsImpl();
-        
-        int choice; // To store user menu choice
+        int choice;
 
-        // Loop until user chooses to exit
         do {
-            // Display menu
             System.out.println("\nWelcome to Standard Chartered Bank");
             System.out.println("1 for Add new Customer");
             System.out.println("2 for Display Customers");
@@ -153,59 +145,71 @@ public class MainApp {
             System.out.println("4 for Delete Customer");
             System.out.println("5 for Exit the bank application");
             System.out.print("Enter choice: ");
-            
-            choice = sc.nextInt(); // Read choice
-            sc.nextLine(); // Clear buffer
+
+            try {
+                choice = sc.nextInt();
+                sc.nextLine(); // clear buffer
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input! Please enter a number between 1-5.");
+                sc.nextLine(); // clear invalid input
+                continue;
+            }
 
             switch (choice) {
                 case 1:
-                    // Input details for new customer
-                    System.out.print("Enter name: ");
-                    String name = sc.nextLine();
-                    System.out.print("Enter email: ");
-                    String email = sc.nextLine();
-                    System.out.print("Enter contact: ");
-                    String contact = sc.nextLine();
-                    System.out.print("Enter account type (Savings or Current): ");
-                    String accountType = sc.nextLine();
-                    
-                    // Call addCustomer method
-                    bank.addCustomer(name, email, contact, accountType);
+                    try {
+                        System.out.print("Enter name: ");
+                        String name = sc.nextLine();
+                        System.out.print("Enter email: ");
+                        String email = sc.nextLine();
+                        System.out.print("Enter contact: ");
+                        String contact = sc.nextLine();
+                        System.out.print("Enter account type (Savings or Current): ");
+                        String accountType = sc.nextLine();
+
+                        bank.addCustomer(name, email, contact, accountType);
+                    } catch (InvalidInputException e) {
+                        System.out.println("Error: " + e.getMessage());
+                    }
                     break;
 
                 case 2:
-                    // Display all customers
                     bank.displayCustomers();
                     break;
 
                 case 3:
-                    // Search for a specific customer
-                    System.out.print("Enter customer id: ");
-                    int searchId = sc.nextInt();
-                    sc.nextLine();
-                    bank.searchCustomer(searchId);
+                    try {
+                        System.out.print("Enter customer id: ");
+                        int searchId = sc.nextInt(); // will throw InputMismatchException if not int
+                        sc.nextLine();
+                        bank.searchCustomer(searchId);
+                    } catch (InputMismatchException e) {
+                        System.out.println("Error: Customer ID must be an integer.");
+                        sc.nextLine();
+                    }
                     break;
 
                 case 4:
-                    // Delete a customer
-                    System.out.print("Enter customer id to delete: ");
-                    int deleteId = sc.nextInt();
-                    sc.nextLine();
-                    bank.deleteCustomer(deleteId);
+                    try {
+                        System.out.print("Enter customer id to delete: ");
+                        int deleteId = sc.nextInt();
+                        sc.nextLine();
+                        bank.deleteCustomer(deleteId);
+                    } catch (InputMismatchException e) {
+                        System.out.println("Error: Customer ID must be an integer.");
+                        sc.nextLine();
+                    }
                     break;
 
                 case 5:
-                    // Exit the application
                     System.out.println("Exiting application...");
                     break;
 
                 default:
-                    // Invalid menu option
                     System.out.println("Invalid choice, try again.");
             }
-        } while (choice != 5); // Repeat until exit
+        } while (choice != 5);
 
-        sc.close(); // Close scanner
+        sc.close();
     }
 }
-
