@@ -1,215 +1,81 @@
-// Custom exception class for invalid inputs
-public class InvalidInputException extends Exception {
-    public InvalidInputException(String message) {
-        super(message); // Pass message to Exception class
-    }
-}
-InvalidInputException.java
+You are a senior frontend engineer and UI/UX designer working on a banking-grade internal application.
+
+I have a Streamlit-based Databricks app called "Resource Cost Manager". The current UI is functional but looks cluttered, unstructured, and not production-ready. Your task is NOT to change functionality, but to significantly improve the UI/UX to match a modern banking/internal enterprise application.
+
+Follow these strict guidelines:
+
+1. Layout & Structure:
+- Use a clean, centered layout with max-width (1200px–1400px), not full stretched UI
+- Add proper padding (16px–24px) and spacing between components
+- Group related elements into cards/sections with subtle shadows or borders
+- Maintain consistent alignment (left-aligned labels, structured grids)
+
+2. Design System:
+- Use a minimal professional color palette:
+  - Primary: deep blue or banking green
+  - Secondary: neutral grays
+  - Background: light gray (#f7f9fb or similar)
+- Avoid excessive colors or bright tones
+- Maintain consistent typography hierarchy:
+  - Page Title
+  - Section Headers
+  - Labels
+  - Inputs
+
+3. Components Styling:
+- Convert forms into structured sections (multi-column grid where needed)
+- Use proper input widths (not full-width everywhere)
+- Add spacing between fields
+- Style buttons:
+  - Primary (filled)
+  - Secondary (outline)
+- Add hover states and subtle transitions
+
+4. Tables:
+- Add zebra striping or subtle row separation
+- Fix column alignment and padding
+- Make header sticky if possible
+- Add sorting/filter UI if feasible
+
+5. Navigation:
+- Convert top buttons (Resource Costs, Add Resource, Genie Assistant) into a proper tab or navbar layout
+- Highlight active tab clearly
+- Keep navigation fixed and clean
+
+6. Forms (Add Resource Page):
+- Break into logical sections:
+  - Project Details
+  - Resource Info
+  - Cost Details
+- Use 2-column responsive layout instead of long vertical scrolling
+- Add section separators and titles
+
+7. Genie Assistant Page:
+- Make it look like a chat interface:
+  - Message bubbles
+  - Input box fixed at bottom
+  - Suggested queries as clickable chips/cards
+- Improve readability and spacing
+
+8. UX Improvements:
+- Reduce empty whitespace and overly stretched components
+- Ensure consistent margins and paddings across pages
+- Avoid clutter — simplify wherever possible
+- Make it look like an internal enterprise banking dashboard (similar to tools used in banks)
 
 
+Now refactor this UI into reusable components (form_section, table_wrapper, navbar, card_container) so that the design stays consistent across all pages.
 
-//////////////////////////////
+9. Streamlit-specific improvements:
+- Use st.container(), st.columns(), st.tabs() properly
+- Use custom CSS (via st.markdown with unsafe_allow_html=True) for styling
+- Override default Streamlit spacing and width behavior
 
-Customer.java (unchanged)
-public class Customer {
-    int id;
-    String name;
-    String email;
-    String contact;
-    String accountType;
+10. Output Expectations:
+- Provide updated Streamlit code with clean structure
+- Include reusable layout helpers/components
+- Add CSS styling block separately
+- Ensure code is modular and readable
 
-    public Customer(int id, String name, String email, String contact, String accountType) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.contact = contact;
-        this.accountType = accountType;
-    }
-}
-
-
-//////////////////////////////
-
-BankOperations.java (unchanged)
-
-public interface BankOperations {
-    void addCustomer(String name, String email, String contact, String accountType) throws InvalidInputException;
-    void displayCustomers();
-    void searchCustomer(int id);
-    void deleteCustomer(int id);
-}
-
-//////////////////////////////////////////////////
-
-BankOperationsImpl.java (with validation added)
-java
-Copy
-Edit
-
-
-public class BankOperationsImpl implements BankOperations {
-
-    private Customer[] customers = new Customer[100];
-    private int count = 0;
-
-    @Override
-    public void addCustomer(String name, String email, String contact, String accountType) throws InvalidInputException {
-        // Validate Name
-        if (!name.matches("[a-zA-Z ]+")) {
-            throw new InvalidInputException("Invalid Name! Name should contain only alphabets.");
-        }
-        // Validate Email
-        if (!email.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$")) {
-            throw new InvalidInputException("Invalid Email! Please enter a valid email address.");
-        }
-        // Validate Contact Number
-        if (!contact.matches("\\d{10}")) {
-            throw new InvalidInputException("Invalid Contact! Contact number must be exactly 10 digits.");
-        }
-        // Validate Account Type
-        if (!(accountType.equalsIgnoreCase("Savings") || accountType.equalsIgnoreCase("Current"))) {
-            throw new InvalidInputException("Invalid Account Type! Must be either Savings or Current.");
-        }
-
-        // If all validations pass → add customer
-        int id = (int) (Math.random() * 9000) + 1000;
-        customers[count] = new Customer(id, name, email, contact, accountType);
-        System.out.println("Customer added successfully with customer id " + id);
-        count++;
-    }
-
-    @Override
-    public void displayCustomers() {
-        if (count == 0) {
-            System.out.println("No customers found.");
-            return;
-        }
-        for (int i = 0; i < count; i++) {
-            System.out.println("Customer Id = " + customers[i].id +
-                    ", Customer name = " + customers[i].name +
-                    ", Customer email = " + customers[i].email +
-                    ", Customer contact = " + customers[i].contact +
-                    ", Account Type = " + customers[i].accountType);
-        }
-    }
-
-    @Override
-    public void searchCustomer(int id) {
-        for (int i = 0; i < count; i++) {
-            if (customers[i].id == id) {
-                System.out.println("Customer Id = " + customers[i].id +
-                        ", Customer name = " + customers[i].name +
-                        ", Customer email = " + customers[i].email +
-                        ", Customer contact = " + customers[i].contact +
-                        ", Account Type = " + customers[i].accountType);
-                return;
-            }
-        }
-        System.out.println("Customer not found.");
-    }
-
-    @Override
-    public void deleteCustomer(int id) {
-        for (int i = 0; i < count; i++) {
-            if (customers[i].id == id) {
-                for (int j = i; j < count - 1; j++) {
-                    customers[j] = customers[j + 1];
-                }
-                customers[count - 1] = null;
-                count--;
-                System.out.println("Customer deleted successfully.");
-                return;
-            }
-        }
-        System.out.println("Customer not found.");
-    }
-}
-
-////////////////////////////////////////////////////
-Main
-
-import java.util.InputMismatchException;
-import java.util.Scanner;
-
-public class MainApp {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        BankOperations bank = new BankOperationsImpl();
-        int choice;
-
-        do {
-            System.out.println("\nWelcome to Standard Chartered Bank");
-            System.out.println("1 for Add new Customer");
-            System.out.println("2 for Display Customers");
-            System.out.println("3 for Search Customer");
-            System.out.println("4 for Delete Customer");
-            System.out.println("5 for Exit the bank application");
-            System.out.print("Enter choice: ");
-
-            try {
-                choice = sc.nextInt();
-                sc.nextLine(); // clear buffer
-            } catch (InputMismatchException e) {
-                System.out.println("Invalid input! Please enter a number between 1-5.");
-                sc.nextLine(); // clear invalid input
-                continue;
-            }
-
-            switch (choice) {
-                case 1:
-                    try {
-                        System.out.print("Enter name: ");
-                        String name = sc.nextLine();
-                        System.out.print("Enter email: ");
-                        String email = sc.nextLine();
-                        System.out.print("Enter contact: ");
-                        String contact = sc.nextLine();
-                        System.out.print("Enter account type (Savings or Current): ");
-                        String accountType = sc.nextLine();
-
-                        bank.addCustomer(name, email, contact, accountType);
-                    } catch (InvalidInputException e) {
-                        System.out.println("Error: " + e.getMessage());
-                    }
-                    break;
-
-                case 2:
-                    bank.displayCustomers();
-                    break;
-
-                case 3:
-                    try {
-                        System.out.print("Enter customer id: ");
-                        int searchId = sc.nextInt(); // will throw InputMismatchException if not int
-                        sc.nextLine();
-                        bank.searchCustomer(searchId);
-                    } catch (InputMismatchException e) {
-                        System.out.println("Error: Customer ID must be an integer.");
-                        sc.nextLine();
-                    }
-                    break;
-
-                case 4:
-                    try {
-                        System.out.print("Enter customer id to delete: ");
-                        int deleteId = sc.nextInt();
-                        sc.nextLine();
-                        bank.deleteCustomer(deleteId);
-                    } catch (InputMismatchException e) {
-                        System.out.println("Error: Customer ID must be an integer.");
-                        sc.nextLine();
-                    }
-                    break;
-
-                case 5:
-                    System.out.println("Exiting application...");
-                    break;
-
-                default:
-                    System.out.println("Invalid choice, try again.");
-            }
-        } while (choice != 5);
-
-        sc.close();
-    }
-}
+Goal:
+The final UI should look like a polished internal banking application — clean, structured, minimal, and professional — NOT like a demo or prototype.
