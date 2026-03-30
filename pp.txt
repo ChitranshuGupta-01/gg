@@ -1,81 +1,68 @@
-You are a senior frontend engineer and UI/UX designer working on a banking-grade internal application.
+Redesign this Streamlit app UI to look like a modern enterprise banking dashboard (similar to Stripe / fintech admin panels).
 
-I have a Streamlit-based Databricks app called "Resource Cost Manager". The current UI is functional but looks cluttered, unstructured, and not production-ready. Your task is NOT to change functionality, but to significantly improve the UI/UX to match a modern banking/internal enterprise application.
+STRICT REQUIREMENTS:
 
-Follow these strict guidelines:
+1. Layout:
 
-1. Layout & Structure:
-- Use a clean, centered layout with max-width (1200px–1400px), not full stretched UI
-- Add proper padding (16px–24px) and spacing between components
-- Group related elements into cards/sections with subtle shadows or borders
-- Maintain consistent alignment (left-aligned labels, structured grids)
+- Add a LEFT SIDEBAR navigation (fixed)
+  - Resource Costs
+  - Add Resource
+  - Genie Assistant
+- Main content should be card-based, not full-width stretched
 
-2. Design System:
-- Use a minimal professional color palette:
-  - Primary: deep blue or banking green
-  - Secondary: neutral grays
-  - Background: light gray (#f7f9fb or similar)
-- Avoid excessive colors or bright tones
-- Maintain consistent typography hierarchy:
-  - Page Title
-  - Section Headers
-  - Labels
-  - Inputs
+2. Top Section:
 
-3. Components Styling:
-- Convert forms into structured sections (multi-column grid where needed)
-- Use proper input widths (not full-width everywhere)
-- Add spacing between fields
-- Style buttons:
-  - Primary (filled)
-  - Secondary (outline)
-- Add hover states and subtle transitions
+- Add a HEADER BAR with:
+  - App title (Resource Cost Manager)
+  - User profile icon (top right)
+  - Subtle shadow
 
-4. Tables:
-- Add zebra striping or subtle row separation
-- Fix column alignment and padding
-- Make header sticky if possible
-- Add sorting/filter UI if feasible
+3. Design System:
 
-5. Navigation:
-- Convert top buttons (Resource Costs, Add Resource, Genie Assistant) into a proper tab or navbar layout
-- Highlight active tab clearly
-- Keep navigation fixed and clean
+- Use a clean color palette:
+  - Primary: #006A4D (bank green)
+  - Background: #F5F7FA (light grey)
+  - Cards: white with soft shadow
+- Rounded corners (border-radius: 12px)
+- Add spacing (padding: 16px–24px)
 
-6. Forms (Add Resource Page):
-- Break into logical sections:
-  - Project Details
-  - Resource Info
-  - Cost Details
-- Use 2-column responsive layout instead of long vertical scrolling
-- Add section separators and titles
+4. Resource Costs Page:
 
-7. Genie Assistant Page:
-- Make it look like a chat interface:
-  - Message bubbles
+- Convert filters into a CARD (not stretched row)
+- Add KPI cards at top:
+  - Total Cost
+  - Active Resources
+  - Avg Cost per Resource
+- Table should be inside a card with:
+  - Sticky header
+  - Zebra rows
+  - Hover effect
+
+5. Add Resource Page:
+
+- Convert form into multi-step form (tabs or sections)
+- Group fields logically
+- Align inputs properly in grid (2 columns)
+
+6. Genie Assistant:
+
+- Make it look like CHAT UI:
+  - Chat bubbles (user vs system)
   - Input box fixed at bottom
-  - Suggested queries as clickable chips/cards
-- Improve readability and spacing
+  - Suggested questions as clickable pills
+- Show SQL in collapsible card
 
-8. UX Improvements:
-- Reduce empty whitespace and overly stretched components
-- Ensure consistent margins and paddings across pages
-- Avoid clutter — simplify wherever possible
-- Make it look like an internal enterprise banking dashboard (similar to tools used in banks)
+7. UX Improvements:
 
+- Add icons everywhere (use emojis or simple icons)
+- Add hover effects on buttons
+- Buttons should be rounded + elevated
+- Reduce empty whitespace
 
-Now refactor this UI into reusable components (form_section, table_wrapper, navbar, card_container) so that the design stays consistent across all pages.
+8. Typography:
 
-9. Streamlit-specific improvements:
-- Use st.container(), st.columns(), st.tabs() properly
-- Use custom CSS (via st.markdown with unsafe_allow_html=True) for styling
-- Override default Streamlit spacing and width behavior
+- Use larger headings
+- Clear section separation
 
-10. Output Expectations:
-- Provide updated Streamlit code with clean structure
-- Include reusable layout helpers/components
-- Add CSS styling block separately
-- Ensure code is modular and readable
-
-Goal:
-The final UI should look like a polished internal banking application — clean, structured, minimal, and professional — NOT like a demo or prototype.
+GOAL:
+Make it look like a production-grade fintech dashboard, not a basic Streamlit app.
