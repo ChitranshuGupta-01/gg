@@ -1,59 +1,38 @@
-Refactor the existing UI to REMOVE clutter and improve cleanliness. Do NOT add new components. Only simplify and refine.
+Refactor the UI to reduce excessive top spacing and improve vertical alignment. Do NOT redesign anything else.
 
 STRICT CHANGES:
 
-1. Sidebar Fix:
+1. Reduce Top Space:
 
-- Keep ONLY one navigation menu (left sidebar)
-- REMOVE duplicate buttons like "Resource Costs", "Add Resource", "Genie Assistant" from main content area
+- Remove excessive margin/padding above the main content
+- Bring the page title ("Resource Costs") closer to the top
+- Ensure content starts immediately below the header/sidebar
 
-2. Icons:
+2. Streamlit Layout Fix:
 
-- Reduce icons by 70%
-- Keep icons ONLY in:
-  - Sidebar menu
-  - KPI cards (optional, small size)
-- REMOVE icons from:
-  - Buttons
-  - Section headers
-  - Input labels
+- Reduce default top padding of the main container
+- Remove unnecessary empty space introduced by layout containers
 
-3. Spacing:
+3. Alignment:
 
-- Reduce top margin significantly
-- Bring content closer to header
-- Maintain consistent padding (16px–20px)
-
-4. Buttons:
-
-- Keep buttons simple (no icons inside buttons)
-- Use consistent size and style
-- Avoid large bulky buttons
-
-5. Layout Simplification:
-
-- Remove unnecessary extra cards/containers
-- Keep:
-  - KPI cards (top)
-  - Filters section
+- Align KPI cards directly below the page title
+- Maintain consistent vertical spacing between:
+  - Title
+  - KPI cards
+  - Filters
   - Table
-- Ensure everything aligns in a clean grid
 
-6. Typography:
+4. Spacing Rules:
 
-- Reduce excessive headings
-- Keep only one main page title
-- Use smaller subheadings
+- Use tight spacing (8px–16px max between sections)
+- Avoid large empty gaps
 
-7. Genie Assistant:
+5. Do NOT:
 
-- Keep it minimal
-- Remove extra decorative elements
-- Focus on clean chat + input box
+- Do NOT add new components
+- Do NOT change colors, layout, or structure
+- Do NOT modify sidebar or cards
+- Only fix spacing and alignment
 
-8. Overall Goal:
-   Make the UI feel clean, minimal, and professional like a fintech dashboard.
-   Avoid over-design, avoid duplication, avoid excessive icons.
-
-IMPORTANT:
-Do not add new features. Only clean and refine the existing UI.
+GOAL:
+Make the UI compact, tight, and professionally aligned like a fintech dashboard.
