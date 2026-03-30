@@ -1,68 +1,59 @@
-Redesign this Streamlit app UI to look like a modern enterprise banking dashboard (similar to Stripe / fintech admin panels).
+Refactor the existing UI to REMOVE clutter and improve cleanliness. Do NOT add new components. Only simplify and refine.
 
-STRICT REQUIREMENTS:
+STRICT CHANGES:
 
-1. Layout:
+1. Sidebar Fix:
 
-- Add a LEFT SIDEBAR navigation (fixed)
-  - Resource Costs
-  - Add Resource
-  - Genie Assistant
-- Main content should be card-based, not full-width stretched
+- Keep ONLY one navigation menu (left sidebar)
+- REMOVE duplicate buttons like "Resource Costs", "Add Resource", "Genie Assistant" from main content area
 
-2. Top Section:
+2. Icons:
 
-- Add a HEADER BAR with:
-  - App title (Resource Cost Manager)
-  - User profile icon (top right)
-  - Subtle shadow
+- Reduce icons by 70%
+- Keep icons ONLY in:
+  - Sidebar menu
+  - KPI cards (optional, small size)
+- REMOVE icons from:
+  - Buttons
+  - Section headers
+  - Input labels
 
-3. Design System:
+3. Spacing:
 
-- Use a clean color palette:
-  - Primary: #006A4D (bank green)
-  - Background: #F5F7FA (light grey)
-  - Cards: white with soft shadow
-- Rounded corners (border-radius: 12px)
-- Add spacing (padding: 16px–24px)
+- Reduce top margin significantly
+- Bring content closer to header
+- Maintain consistent padding (16px–20px)
 
-4. Resource Costs Page:
+4. Buttons:
 
-- Convert filters into a CARD (not stretched row)
-- Add KPI cards at top:
-  - Total Cost
-  - Active Resources
-  - Avg Cost per Resource
-- Table should be inside a card with:
-  - Sticky header
-  - Zebra rows
-  - Hover effect
+- Keep buttons simple (no icons inside buttons)
+- Use consistent size and style
+- Avoid large bulky buttons
 
-5. Add Resource Page:
+5. Layout Simplification:
 
-- Convert form into multi-step form (tabs or sections)
-- Group fields logically
-- Align inputs properly in grid (2 columns)
+- Remove unnecessary extra cards/containers
+- Keep:
+  - KPI cards (top)
+  - Filters section
+  - Table
+- Ensure everything aligns in a clean grid
 
-6. Genie Assistant:
+6. Typography:
 
-- Make it look like CHAT UI:
-  - Chat bubbles (user vs system)
-  - Input box fixed at bottom
-  - Suggested questions as clickable pills
-- Show SQL in collapsible card
+- Reduce excessive headings
+- Keep only one main page title
+- Use smaller subheadings
 
-7. UX Improvements:
+7. Genie Assistant:
 
-- Add icons everywhere (use emojis or simple icons)
-- Add hover effects on buttons
-- Buttons should be rounded + elevated
-- Reduce empty whitespace
+- Keep it minimal
+- Remove extra decorative elements
+- Focus on clean chat + input box
 
-8. Typography:
+8. Overall Goal:
+   Make the UI feel clean, minimal, and professional like a fintech dashboard.
+   Avoid over-design, avoid duplication, avoid excessive icons.
 
-- Use larger headings
-- Clear section separation
-
-GOAL:
-Make it look like a production-grade fintech dashboard, not a basic Streamlit app.
+IMPORTANT:
+Do not add new features. Only clean and refine the existing UI.
