@@ -1,38 +1,32 @@
-Refactor the UI to reduce excessive top spacing and improve vertical alignment. Do NOT redesign anything else.
+Analyze the entire codebase and identify all coding patterns, conventions, and architectural decisions currently being followed.
 
-STRICT CHANGES:
+Create a GitHub Copilot instruction file (.github/copilot-instructions.md) that future AI agents must follow when generating code.
 
-1. Reduce Top Space:
+Include:
 
-- Remove excessive margin/padding above the main content
-- Bring the page title ("Resource Costs") closer to the top
-- Ensure content starts immediately below the header/sidebar
+- Folder structure conventions
+- Naming conventions for files, classes, interfaces, types, DTOs, services, controllers, repositories, utilities, and constants
+- API implementation patterns
+- Directus integration patterns
+- Error handling approach
+- Logging conventions
+- Dependency injection patterns
+- Static method usage rules
+- Async/await usage standards
+- TypeScript typing standards
+- Import ordering conventions
+- Database access patterns
+- Validation patterns
+- Response formatting standards
+- Testing patterns
+- Code organization principles
 
-2. Streamlit Layout Fix:
+Important requirements:
 
-- Reduce default top padding of the main container
-- Remove unnecessary empty space introduced by layout containers
-
-3. Alignment:
-
-- Align KPI cards directly below the page title
-- Maintain consistent vertical spacing between:
-  - Title
-  - KPI cards
-  - Filters
-  - Table
-
-4. Spacing Rules:
-
-- Use tight spacing (8px–16px max between sections)
-- Avoid large empty gaps
-
-5. Do NOT:
-
-- Do NOT add new components
-- Do NOT change colors, layout, or structure
-- Do NOT modify sidebar or cards
-- Only fix spacing and alignment
-
-GOAL:
-Make the UI compact, tight, and professionally aligned like a fintech dashboard.
+- Analyze the existing codebase first before creating the file.
+- Use only conventions that already exist in the project.
+- Do not suggest improvements, refactoring, or modern alternatives.
+- Do not invent new patterns.
+- If multiple patterns exist, prefer the pattern used by the majority of production code.
+- The generated instruction file should be detailed enough that future AI-generated code is indistinguishable from existing project code.
+- Save the result as .github/copilot-instructions.md.
