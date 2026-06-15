@@ -1,102 +1,79 @@
-[
-  {
-    "user_created": "admin",
-    "module": "cases",
-    "record_id": "CASE-1001",
-    "action": "update",
-    "summary": "Auto assignment based on workload distribution",
-    "changed_fields": "owner",
-    "before": "",
-    "after": "John Doe"
-  },
-  {
-    "user_created": "admin",
-    "module": "cases",
-    "record_id": "CASE-1001",
-    "action": "update",
-    "summary": "Escalated due to specialized knowledge required",
-    "changed_fields": "owner",
-    "before": "John Doe",
-    "after": "Sarah Wilson"
-  },
-  {
-    "user_created": "john",
-    "module": "cases",
-    "record_id": "CASE-1002",
-    "action": "update",
-    "summary": "Ownership transferred after shift handover",
-    "changed_fields": "owner",
-    "before": "Mike Chen",
-    "after": "Emma Rodriguez"
-  },
-  {
-    "user_created": "sarah",
-    "module": "cases",
-    "record_id": "CASE-1003",
-    "action": "update",
-    "summary": "Assigned to fraud investigation specialist",
-    "changed_fields": "owner",
-    "before": "David Wilson",
-    "after": "Sarah Wilson"
-  },
-  {
-    "user_created": "admin",
-    "module": "cases",
-    "record_id": "CASE-1004",
-    "action": "update",
-    "summary": "Reassigned due to workload balancing",
-    "changed_fields": "owner",
-    "before": "Emma Rodriguez",
-    "after": "Lisa Anderson"
-  },
-  {
-    "user_created": "admin",
-    "module": "alerts",
-    "record_id": "ALT-2001",
-    "action": "update",
-    "summary": "Auto assignment based on alert routing rules",
-    "changed_fields": "owner",
-    "before": "",
-    "after": "Analyst A"
-  },
-  {
-    "user_created": "john",
-    "module": "alerts",
-    "record_id": "ALT-2001",
-    "action": "update",
-    "summary": "Escalated to senior investigator",
-    "changed_fields": "owner",
-    "before": "Analyst A",
-    "after": "Analyst B"
-  },
-  {
-    "user_created": "sarah",
-    "module": "alerts",
-    "record_id": "ALT-2002",
-    "action": "update",
-    "summary": "Transferred for sanctions screening review",
-    "changed_fields": "owner",
-    "before": "Analyst C",
-    "after": "Analyst D"
-  },
-  {
-    "user_created": "admin",
-    "module": "alerts",
-    "record_id": "ALT-2003",
-    "action": "update",
-    "summary": "Assigned to regional investigation team",
-    "changed_fields": "owner",
-    "before": "Analyst E",
-    "after": "Analyst F"
-  },
-  {
-    "user_created": "john",
-    "module": "alerts",
-    "record_id": "ALT-2004",
-    "action": "update",
-    "summary": "Ownership changed after case conversion",
-    "changed_fields": "owner",
-    "before": "Analyst G",
-    "after": "Analyst H"
-  }
-]
+Create a new service file for fetching history records from Directus.
+
+Requirements:
+
+1. Create "src/services/history.ts".
+
+2. Use the existing Directus SDK/client used elsewhere in the application.
+
+3. Create TypeScript interface:
+
+export interface HistoryRecord {
+  id: number;
+  user_created: string;
+  date_created: string;
+  module: string;
+  record_id: string;
+  action: string;
+  summary: string;
+  changed_fields: string[];
+  before: Record<string, any>;
+  after: Record<string, any>;
+}
+
+4. Add function:
+
+export async function fetchHistory(recordId: string): Promise<HistoryRecord[]>
+
+5. Fetch from Directus collection "history".
+
+6. Filter records where:
+
+record_id === recordId
+
+7. Sort by:
+
+date_created DESC
+
+8. Return typed results.
+
+9. Handle API failures gracefully and return empty array.
+
+
+Refactor OwnershipTab to use Directus history data instead of mock/generated data.
+
+Requirements:
+
+1. Remove:
+   
+   - generateCaseOwnershipHistory()
+   - all Math.random() usage
+   - all hardcoded assignees
+
+2. Load history records from:
+
+fetchHistory(caseItem.id)
+
+3. Only show records where:
+
+changed_fields includes "owner"
+
+4. Map Directus record into UI model:
+
+{
+  id: history.id.toString(),
+  type: "reassignment",
+  assignedFrom: history.before?.owner,
+  assignedTo: history.after?.owner,
+  assignedBy: history.user_created,
+  assignedAt: history.date_created,
+  reason: history.summary
+}
+
+5. Preserve current UI design exactly.
+
+6. Preserve expand/collapse behavior.
+
+7. Show loading state.
+
+8. Show empty state when no ownership history exists.
