@@ -1,18 +1,31 @@
-Improve only the styling and layout of the Sort dropdown in the Cases panel.
+Review the recently added sorting feature and make the following improvements without changing any existing functionality or business logic.
+
+1. Refactor sort mapping
+- Remove the use of `.reduce()` for creating `SEVERITY_SORT_ORDER` and `STATUS_SORT_ORDER` inside the component.
+- Instead, create explicit mapping constants in `caseEnums.ts`, similar to the existing `PRIORITY_TO_NUMBER`.
+- Add:
+  - `SEVERITY_TO_NUMBER`
+  - `STATUS_TO_NUMBER`
+- Export these mappings from `caseEnums.ts`.
+- Update the sorting logic to import and use these constants directly.
+- Keep the sort order exactly the same as defined by the existing option arrays.
+- Delete any now-unused `.reduce()` code.
+
+2. Improve Sort dropdown UI
+- Do not change any sorting logic or React state management.
+- Only improve the JSX structure and Tailwind classes.
 
 Requirements:
-- Do NOT change any functionality or sorting logic.
-- Do NOT change state management, event handlers, or the sortCases function.
-- Only modify the JSX structure and Tailwind CSS classes if needed.
+- Make the Sort control visually consistent with the Search input, Filter button, and filter chips.
+- Reduce its width (approximately 140–160px).
+- Align the Sort control to the right side while keeping the "X cases found" text on the left using `flex` and `justify-between`.
+- Match the height, border, border radius, padding, and typography of surrounding controls.
+- Improve spacing between the sort icon, text, and dropdown arrow.
+- Keep it responsive and support both light and dark themes.
+- Reuse existing Tailwind utility classes already used in this component.
+- Do not introduce custom CSS or new dependencies.
 
-UI goals:
-1. Make the Sort control visually consistent with the existing search box, filter button, and filter chips.
-2. Reduce its width so it doesn't dominate the row (around 140-160px).
-3. Align the Sort control to the right side of the row while keeping the "X cases found" text on the left using flex and justify-between.
-4. Match the height, border, border radius, padding, and typography of the surrounding controls.
-5. Improve spacing between the sort icon, text, and dropdown arrow.
-6. Ensure the control looks clean in both light and dark themes.
-7. Keep the component responsive and avoid layout shifts.
-8. Do not introduce any new dependencies or custom CSS. Use existing Tailwind utility classes already used in this file.
-
-Return only the minimal JSX and Tailwind class changes with a brief explanation of why each change improves the UI.
+3. Code quality
+- Keep the implementation simple and consistent with the existing codebase.
+- Remove any dead or redundant code introduced by the refactor.
+- Return only the minimal code changes with a brief explanation of each change.
