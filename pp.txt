@@ -1,1 +1,46 @@
-Review the current sorting implementation. Since priority, severity, urgency, and risk_score are stored as numeric values in the database, move sorting for these fields to the database/Directus GraphQL query instead of performing it in route.ts. Keep custom sorting logic only for status, since it is stored as text and requires a business-defined order
+I want to implement artifact download functionality in this codebase.
+
+Please first understand the existing upload implementation before making any changes.
+
+Current architecture:
+- Artifacts are uploaded using uploadToMinio() in artifactUploads.ts.
+- enrichArtifactFieldsWithUpload() calls uploadToMinio() and enriches the artifact object.
+- Alert/Case services save the returned artifact metadata into Directus.
+- Database stores storage_key, storage_uri, metadata, etc.
+- Currently the frontend downloads using storage_uri directly, but I want to replace this.
+
+I want to implement Option A (backend streaming), NOT presigned URLs.
+
+Requirements:
+
+1. Reuse the existing MinIO configuration (getMinioConfig()).
+2. Do not duplicate MinIO client creation logic unnecessarily.
+3. Add a helper in artifactUploads.ts (or another appropriate service) that retrieves an object from MinIO using storage_key.
+4. The backend should expose a download endpoint.
+5. The endpoint should:
+   - Validate the request.
+   - Fetch the artifact record from Directus.
+   - Read storage_key.
+   - Retrieve the object from MinIO.
+   - Stream the object back to the client.
+6. Do NOT expose MinIO URLs to the frontend.
+7. Set proper response headers:
+   - Content-Type
+   - Content-Length (if available)
+   - Content-Disposition so the browser downloads using the original filename.
+8. Reuse existing architecture and coding style.
+9. Add proper error handling:
+   - Artifact not found
+   - Missing storage_key
+   - Object missing in MinIO
+   - MinIO connection failures
+10. Do not break existing upload functionality.
+
+Before writing code, explain:
+- Which files need to change.
+- Why each change is needed.
+- The end-to-end request flow.
+
+Then implement the changes step by step with clear explanations.
+
+If there are multiple architectural choices in this project, follow the existing project conventions rather than introducing a new pattern.
