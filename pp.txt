@@ -1,46 +1,38 @@
-I want to implement artifact download functionality in this codebase.
-
-Please first understand the existing upload implementation before making any changes.
+I have already implemented secure download functionality for artifacts in my Next.js + TypeScript project using MinIO.
 
 Current architecture:
-- Artifacts are uploaded using uploadToMinio() in artifactUploads.ts.
-- enrichArtifactFieldsWithUpload() calls uploadToMinio() and enriches the artifact object.
-- Alert/Case services save the returned artifact metadata into Directus.
-- Database stores storage_key, storage_uri, metadata, etc.
-- Currently the frontend downloads using storage_uri directly, but I want to replace this.
 
-I want to implement Option A (backend streaming), NOT presigned URLs.
+- Route: src/app/api/artifacts/[id]/download/route.ts
+- Service: ArtifactDownloadService.getDownloadPayload(id)
+- Storage helper: getObjectFromMinio(storageKey)
+- Files are stored in MinIO.
+- Metadata (storage_key, mime_type, content_type, original_filename, etc.) is stored in Directus.
+- The service returns:
+  {
+    stream,
+    size,
+    contentType,
+    filename
+  }
+
+The download route streams the file back using NextResponse with:
+- Content-Type
+- Content-Length
+- Content-Disposition: attachment
+
+I now want to implement PREVIEW functionality while reusing as much existing code as possible.
 
 Requirements:
+1. Do NOT duplicate business logic.
+2. Reuse ArtifactDownloadService.getDownloadPayload().
+3. Reuse getObjectFromMinio().
+4. Create a new route:
+   src/app/api/artifacts/[id]/preview/route.ts
+5. Stream the file exactly like download.
+6. Use Content-Disposition: inline instead of attachment.
+7. Preserve Content-Type and Content-Length.
+8. Support browser preview for images, PDFs, videos, and audio.
+9. Return proper HTTP errors exactly like the download route.
+10. Keep the implementation clean and enterprise-ready.
 
-1. Reuse the existing MinIO configuration (getMinioConfig()).
-2. Do not duplicate MinIO client creation logic unnecessarily.
-3. Add a helper in artifactUploads.ts (or another appropriate service) that retrieves an object from MinIO using storage_key.
-4. The backend should expose a download endpoint.
-5. The endpoint should:
-   - Validate the request.
-   - Fetch the artifact record from Directus.
-   - Read storage_key.
-   - Retrieve the object from MinIO.
-   - Stream the object back to the client.
-6. Do NOT expose MinIO URLs to the frontend.
-7. Set proper response headers:
-   - Content-Type
-   - Content-Length (if available)
-   - Content-Disposition so the browser downloads using the original filename.
-8. Reuse existing architecture and coding style.
-9. Add proper error handling:
-   - Artifact not found
-   - Missing storage_key
-   - Object missing in MinIO
-   - MinIO connection failures
-10. Do not break existing upload functionality.
-
-Before writing code, explain:
-- Which files need to change.
-- Why each change is needed.
-- The end-to-end request flow.
-
-Then implement the changes step by step with clear explanations.
-
-If there are multiple architectural choices in this project, follow the existing project conventions rather than introducing a new pattern.
+Please generate the complete implementation and explain every change.
